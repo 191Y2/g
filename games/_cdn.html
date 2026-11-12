@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Loading&hellip;</title>
+<style>
+html,body{margin:0;height:100%;background:#09090b;color:#a1a1aa;font:13px/1.5 system-ui,sans-serif;display:grid;place-items:center}
+#s{padding:24px;text-align:center}
+</style>
+</head>
+<body>
+<div id="s">Fetching game&hellip;</div>
+<script>
+(function () {
+  "use strict";
+  var base = decodeURIComponent(location.hash.slice(1));
+  var ok = /^https:\/\/cdn\.jsdelivr\.net\/gh\/[^?#]+\/$/.test(base);
+  if (!ok) { document.getElementById("s").textContent = "Bad game source."; return; }
+
+  function fail(msg) { document.getElementById("s").textContent = msg; }
+
+  fetch(base + "index.html", { mode: "cors" }).then(function (r) {
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return r.text();
+  }).then(function (html) {
+    function abs(u) { try { return new URL(u, base).href; } catch (e) { return u; } }
+    // relative (no scheme, no //, no #, no data:/blob:/mailto:/javascript:)
+    function isRel(u) { return !/^\s*(https?:|data:|blob:|mailto:|javascript:|#|\/\/)/i.test(u); }
+
+    // absolutize src/href attributes (double + single quoted)
+    html = html.replace(/\s(src|href)\s*=\s*"([^"]*)"/gi, function (m, a, u) {
+      var t = u.trim();
+      return isRel(t) ? " " + a + '="' + abs(t) + '"' : m;
+    });
+    html = html.replace(/\s(src|href)\s*=\s*'([^']*)'/gi, function (m, a, u) {
+      var t = u.trim();
+      return isRel(t) ? " " + a + "='" + abs(t) + "'" : m;
+    });
+    // Unity loader config values
+    html = html.replace(/(dataUrl|frameworkUrl|codeUrl|streamingAssetsUrl)\s*:\s*"([^"]*)"/gi, function (m, k, u) {
+      var t = u.trim();
+      return isRel(t) ? k + ': "' + abs(t) + '"' : m;
+    });
+    // file merger base path
+    html = html.replace(/\b(basePath)\s*:\s*"([^"]*)"/gi, function (m, k, u) {
+      var t = u.trim();
+      return isRel(t) ? k + ': "' + abs(t) + '"' : m;
+    });
+    // force a <base> pointing at the CDN folder for anything missed
+    var btag = '<base href="' + base + '">';
+    if (/<base\s+href=/i.test(html)) html = html.replace(/<base\s+href="[^"]*"\s*\/?>/i, btag);
+    else if (/<head[^>]*>/i.test(html)) html = html.replace(/<head([^>]*)>/i, "<head$1>" + btag);
+    else html = btag + html;
+
+    document.open();
+    document.write(html);
+    document.close();
+  }).catch(function (e) {
+    fail("Could not reach the game CDN (" + (e && e.message ? e.message : e) + "). Go back and try again.");
+  });
+})();
+</script>
+</body>
+</html>

@@ -9,7 +9,9 @@ A private, local-first library of playables. Static HTML/CSS/JS — no build ste
 3. Repo **Settings → Pages → Source: Deploy from a branch → main / (root)** → Save.
 4. Your site lives at `https://<user>.github.io/<repo>/`.
 
-Everything runs client-side, so GitHub Pages is all you need. The whole site is ~330 KB (covers are fetched on demand, not bundled).
+Everything runs client-side, so GitHub Pages is all you need. The whole site is a **single ~7 MB download with ~185 files** — 1,401 self-contained games ride inside one on-demand `games/bundle.json`, 164 multi-file launchers ship as plain files in `games/`, and everything else (engines, art, audio) streams from public CDNs only when you open a game.
+
+**Re-deploying over an old copy:** delete the old `games/` folder in your repo first (or the whole repo contents), then upload the new files — leftovers from the old build keep their old, broken behavior. The GitHub web uploader takes up to 100 files per drag: drag `index.html` + `.nojekyll` + `README.md` + the `assets/` folder in one batch, then the `games/` folder in two more.
 
 ## Access
 
@@ -20,7 +22,12 @@ To change or revoke the key, edit `KEY_HASH` in `assets/js/auth.js` (it stores `
 ## Features
 
 - **2,000+ games** across 21 genres and 46 ranked series, each game tagged and curated
-- **Featured + Trending** shelves lead with Traffic Rider and Traffic Racer (web builds, always playable — the rest are Drive embeds)
+- **Every game runs from the site itself or a public CDN — Google Drive previews are no longer used to play games** (Google stopped rendering uploaded HTML in Drive's viewer, which broke the whole stash). Pipelines:
+  - **Packed** (1,401 games) — self-contained launchers inside `games/bundle.json`, fetched once and served as same-origin pages
+  - **Bundled files** (164 games) — multi-file launchers shipped in `games/` as plain files
+  - **CDN-streamed** (472 games) — launchers fetched live from their jsdelivr repo mirror and served as same-origin pages (this is how **Highway Racer 2** runs)
+  - **Web builds** — Traffic Rider / Traffic Racer embed directly from the GameMonetize publisher network
+  - The 20 remaining games are single-file giants (Eaglercraft builds, Hill Climb Racing 2, Geometry Dash Subzero…) that can't ride in the site. For those, use **Direct** in the player to download the file once, then add it via Settings → Add games — it plays offline forever after.
 - **Covers on demand** — no bundled images. Card art is fetched from Wikipedia with a strict relevance filter (only pages whose description says it's that video game), cached per device, with clean letter tiles as fallback. Games hosted on publisher CDNs (like the two above) use their official thumbnails.
 - **Player** — reload, display modes (fit / original), fullscreen (`F`), direct-link fallback, auto clicker hook
 - **Tools** — auto clicker (works inside uploaded games), tab cloak, panic key (all in Settings)
@@ -40,6 +47,7 @@ Settings → Developer → enter the dev code to unlock:
 
 ## Notes
 
-- Most games are embedded from the sources the library was built from (Google Drive previews). If a single game ever refuses to load, use the **Direct** button in the player toolbar.
-- Traffic Rider / Traffic Racer stream from GameMonetize's publisher CDN (the same network most unblocked sites embed from). First load downloads the engine (~20–40 MB), then it's cached by the browser. They show a short skippable ad — that's how the devs keep them free.
+- **Why games load without Drive:** Google changed Drive so uploaded HTML files render as *text* instead of running. The launchers here are the same files the stash used, served as real web pages again — bundled in the repo or mirrored on jsdelivr.
+- If a single game refuses to load (its CDN mirror died), use the **Direct** button in the player toolbar, or re-add the file via Settings → Add games.
+- First launch of a 3D game downloads its engine (~10–40 MB) from the CDN, then the browser caches it. Some show a short skippable ad — that's how the devs keep them free.
 - All data (favorites, uploads, settings, dev state) lives in your browser. Use Settings → Data → Export for backups.

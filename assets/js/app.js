@@ -279,7 +279,7 @@
     top.forEach(function (s) { srow.appendChild(seriesCard(s)); });
 
     // trending
-    var TREND = ["trafficriderlegend", "trafficracerking", "eaglercraftx1206", "retrobowl", "FNAF", "slopeplus", "ovofixed", "smashkartsworking", "getawayshootout", "1v1maybeidk", "subwaysurferslondon", "bitlife", "cookieclicker", "motox3mm", "kourio", "justfalllol", "btd5", "basketrandom", "monkeymart", "webfishing", "blockblast", "nubbysnumberfactory", "tanukisunset", "driftboss", "2048", "grannyy", "drifthuntersmerge", "pvz", "run3", "vampiresurvivors", "amongus", "rooftopsnipers"];
+    var TREND = ["trafficriderlegend", "trafficracerking", "highwayracer2", "retrobowl", "FNAF", "slopeplus", "ovofixed", "smashkartsworking", "getawayshootout", "1v1maybeidk", "subwaysurferslondon", "bitlife", "cookieclicker", "motox3mm", "kourio", "justfalllol", "btd5", "basketrandom", "monkeymart", "webfishing", "blockblast", "nubbysnumberfactory", "tanukisunset", "driftboss", "2048", "grannyy", "drifthuntersmerge", "pvz", "run3", "vampiresurvivors", "amongus", "rooftopsnipers"];
     var trendGames = TREND.map(function (k) { return byKey[k]; }).filter(Boolean);
     var trow = makeRow(page, "Trending now", "", "#/library?sort=trending");
     trendGames.forEach(function (g) { trow.appendChild(gameCard(g)); });
