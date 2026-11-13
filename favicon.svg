@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- OCTAGON HQ favicon: the fight octagon, red on canvas-black -->
+  <rect width="64" height="64" rx="12" fill="#120f17"/>
+  <path d="M54.2 22.8 L54.2 41.2 L41.2 54.2 L22.8 54.2 L9.8 41.2 L9.8 22.8 L22.8 9.8 L41.2 9.8 Z"
+        fill="none" stroke="#e5322d" stroke-width="5" stroke-linejoin="round"/>
+  <circle cx="32" cy="32" r="5.5" fill="#f4f1ea"/>
+</svg>
